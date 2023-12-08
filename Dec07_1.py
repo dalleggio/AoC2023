@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 from pprint import pprint
 from collections import namedtuple
+from enum import Enum
 
 Game = namedtuple('Game', ['hand', 'bid'])
 # List of card values
@@ -32,16 +30,22 @@ def insort(ranked_list, game):
         ranked_list.insert(0, game)
     return(ranked_list)
 
-
-# In[2]:
-
-
 # List to hold the number of card values in each hand
 card_num = [0] * len(card_list)
 # Dict to associate card counts with card values
 hand_dict = dict(zip(card_list, card_num))
+# Enum for hand types
+class Type(Enum):
+    HIGH = 0
+    ONE_PAIR = 1
+    TWO_PAIR = 2
+    THREE = 3
+    FULL_HOUSE = 4
+    FOUR = 5
+    FIVE = 6
 # Poker hand rank dict
-poker_hand_rank = {(5,) : 6, (1,4) : 5, (2,3) : 4, (1,1,3) : 3, (1,2,2) : 2, (1,1,1,2) : 1, (1,1,1,1,1) : 0}
+poker_hand_rank = {(5,) : Type.FIVE, (1,4) : Type.FOUR, (2,3) : Type.FULL_HOUSE, \
+                   (1,1,3) : Type.THREE, (1,2,2) : Type.TWO_PAIR, (1,1,1,2) : Type.ONE_PAIR, (1,1,1,1,1) : Type.HIGH}
 # List to hold ranked hands
 games_ranked = [[] for _ in range(len(poker_hand_rank))]
 games = []
@@ -50,27 +54,21 @@ with open("poker.txt") as fin:
         games.append(Game(line.strip().split()[0], line.strip().split()[1]))
     #pprint(games)
 
-
-# In[3]:
-
-
 for game in games:
     # Clear dict values but keep keys
     hand_dict = {k: 0 for k, v in hand_dict.items()}
+    # Count number of cards of each type and store in dict
     for card in game.hand:
         hand_dict[card] += 1
+    # Get a list representation of the number of groupings of cards (1, 2, 3, 4, or 5)
     num_list = []
     for num in (num for num in hand_dict.values() if num != 0):
         num_list.append(num)
     print (game.hand, tuple(sorted(num_list)))
     hand_rank = poker_hand_rank[tuple(sorted(num_list))]
     #print ('hand rank: ', hand_rank)
-    games_ranked[hand_rank] = insort(games_ranked[hand_rank], game)
+    games_ranked[hand_rank.value] = insort(games_ranked[hand_rank.value], game)
 pprint (games_ranked)
-
-
-# In[4]:
-
 
 # Traverse games_ranked lists and calculate total winnings
 k = 1
@@ -81,10 +79,3 @@ for i in range(len(games_ranked)):
         k += 1
 print('k: ', k)
 print('total winnings: ', total_win)
-
-
-# In[ ]:
-
-
-
-
