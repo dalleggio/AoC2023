@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[166]:
-
-
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-
-
-# In[167]:
-
 
 def get_edges(wa, node, graph):
     #print('get edges: node:', node, 'graph:', graph)
@@ -30,12 +23,7 @@ def get_edges(wa, node, graph):
                 q.append((nr, nc, l + 1))
                 visited.add((nr, nc))
 
-
     return edges
-
-
-# In[168]:
-
 
 fn = "data/walk.txt"
 
@@ -53,10 +41,6 @@ start = (0, start_c)
 end_c = np.where(wa[num_rows-1,:] == '.')[0][0]
 end = (num_rows-1, end_c)
 print('start:', start, 'end:', end)
-
-
-# In[169]:
-
 
 G = nx.Graph()
 dirs = {'dirs' : []}
@@ -84,10 +68,6 @@ for r in range(num_rows):
 
 print(G.nodes)
 
-
-# In[ ]:
-
-
 # Find edges and their length
 for node in G.nodes:
     if len(G.nodes[node]['dirs']) > 0:
@@ -110,10 +90,3 @@ for path in nx.all_simple_edge_paths(G, start, end):
 
 print('longest path: ', max(path_len_list))
 nx.draw_networkx(G)
-
-
-# In[ ]:
-
-
-
-
