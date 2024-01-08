@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 from pprint import pprint
 import numpy as np
 from queue import Queue
-
-
-# In[2]:
-
 
 fn = "data/walk.txt"
 
@@ -28,10 +21,6 @@ start = (0, start_c)
 end_c = np.where(wa[num_rows-1,:] == '.')[0][0]
 end = (num_rows-1, end_c)
 print('start:', start, 'end:', end)
-
-
-# In[3]:
-
 
 path_q = Queue()
 path_q.put((*start, 'D', 0))
